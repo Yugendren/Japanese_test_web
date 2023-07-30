@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kanji Test</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 48px;
+            margin-bottom: 30px;
+        }
+
+        .test-form {
+            margin-bottom: 20px;
+        }
+
+        .test-form h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        #sentence {
+            font-size: 28px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            font-size: 24px;
+            padding: 5px;
+            width: 100%;
+        }
+
+        button {
+            font-size: 24px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #666;
+        }
+
+        #result {
+            font-size: 24px;
+            color: #333;
+        }
+
+        #tickCross {
+            font-size: 48px;
+            margin-top: 10px;
+        }
+
+        #scoreContainer {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+
+        #scoreCircle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+        }
+
+        #scoreFraction {
+            font-size: 24px;
+            color: white;
+        }
+
+        #correctAnswer {
+            font-size: 24px;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        #finalScore {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        #testResultLink {
+            font-size: 24px;
+            color: #333;
+            display: none;
+        }
+
+        a {
+            color: #333;
+            text-decoration: none;
+            font-size: 24px;
+            display: block;
+            margin-top: 20px;
+        }
+
+        a:hover {
+            color: #666;
+        }
+    </style>
+    <script>
+        var sentences = {{ sentences | tojson }};
+        var answers = {{ answers | tojson }};
+
+        var currentSentenceIndex = 0;
+        var score = 0;
+
+        function displaySentence() {
+            var sentence = sentences[currentSentenceIndex][0];
+            document.getElementById('sentence').textContent = sentence;
+        }
+
+        function checkAnswer() {
+            var answer = document.getElementById('answer').value;
+            var sentence = sentences[currentSentenceIndex][0];
+            var result = document.getElementById('result');
+            var tickCross = document.getElementById('tickCross');
+            var correctAnswer = answers[currentSentenceIndex][0];
+
+            // Remove full stop from answers
+            var formattedAnswer = answer.trim().replace(/[.。]$/, '');
+            var formattedCorrectAnswer = correctAnswer.trim().replace(/[.。]$/, '');
+
+            if (formattedAnswer.toLowerCase() === formattedCorrectAnswer.toLowerCase()) {
+                result.textContent = 'Correct';
+                result.style.color = 'green';
+                tickCross.textContent = '✔️';
+                tickCross.style.color = 'green';
+                score++;
+            } else {
+                result.textContent = 'Wrong';
+                result.style.color = 'red';
+                tickCross.textContent = '❌';
+                tickCross.style.color = 'red';
+            }
+
+            document.getElementById('nextButton').style.display = 'inline-block';
+            document.getElementById('correctAnswer').textContent = 'Correct Answer: ' + correctAnswer;
+            document.getElementById('submitButton').style.display = 'none';
+            document.getElementById('answer').readOnly = true;
+            document.getElementById('answer').value = '';
+
+            updateScore();
+        }
+
+
+        function updateScore() {
+            var totalQuestions = sentences.length;
+            var scoreFraction = score + ' / ' + totalQuestions;
+            document.getElementById('scoreFraction').textContent = scoreFraction;
+        }
+
+        function nextQuestion() {
+            document.getElementById('nextButton').style.display = 'none';
+            document.getElementById('submitButton').style.display = 'inline-block';
+            document.getElementById('answer').readOnly = false;
+
+            if (currentSentenceIndex < sentences.length - 1) {
+                currentSentenceIndex++;
+                displaySentence();
+                document.getElementById('result').textContent = '';
+                document.getElementById('tickCross').textContent = '';
+                document.getElementById('correctAnswer').textContent = '';
+            } else {
+                var finalResult = 'Final Score: ' + score + ' / ' + sentences.length;
+                document.getElementById('finalScore').textContent = finalResult;
+                document.getElementById('testForm').style.display = 'none';
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('nextButton').style.display = 'none';
+                document.getElementById('testResultLink').style.display = 'inline-block';
+            }
+
+            updateScore();
+        }
+    </script>    
+</head>
+<body>
+    <h1>Kanji Test</h1>
+    <div id="testForm">
+        <div class="test-form">
+            <h2>Enter the correct sentence in Japanese:</h2>
+            <p id="sentence"></p>
+            <input type="text" id="answer">
+        </div>
+        <div class="test-form">
+            <button id="submitButton" onclick="checkAnswer()">Submit</button>
+            <button id="nextButton" style="display: none;" onclick="nextQuestion()">Next</button>
+        </div>
+        <p id="result"></p>
+        <p id="tickCross"></p>
+        <div id="scoreContainer">
+            <div id="scoreCircle">
+                <span id="scoreFraction">0 / 0</span>
+            </div>
+        </div>
+        <p id="correctAnswer"></p>
+    </div>
+    <div id="result" style="display: none;">
+        <h2 id="finalScore"></h2>
+        <a id="testResultLink" href="/test_result" style="display: none;">View Test Results</a>
+    </div>
+    <a href="/">Return Home</a>
+    <script>
+        displaySentence();
+    </script>
+</body>
+</html>

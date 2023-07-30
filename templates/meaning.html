@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kanji Meaning</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 48px;
+            margin-bottom: 30px;
+        }
+
+        .kanji {
+            text-align: center;
+            font-size: 72px;
+            margin-bottom: 20px;
+        }
+
+        .meaning {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .furigana {
+            text-align: center;
+            font-size: 24px;
+            color: #666;
+            margin-top: -80px; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Kanji Meaning</h1>
+    <div class="kanji">
+        <p>{{ kanji_character }}</p>
+        <p class="furigana">{{ furigana }}</p>
+    </div>
+    <div class="meaning">
+        <p>{{ meaning }}</p>
+    </div>
+    <a href="/">Return to Kanji Index</a>
+</body>
+</html>

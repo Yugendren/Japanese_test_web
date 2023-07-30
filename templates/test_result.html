@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kanji Test Result</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 32px;
+        }
+
+        .result-card {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .score {
+            font-size: 24px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .summary {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .summary-label {
+            font-weight: bold;
+        }
+
+        .summary-value {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Result</h1>
+    <div class="result-card">
+        <div class="score">{{ score }} / {{ total_questions }}</div>
+        <div class="summary">
+            <span class="summary-label">Correct Answers:</span>
+            <span class="summary-value">{{ correct_answers }}</span>
+        </div>
+        <div class="summary">
+            <span class="summary-label">Wrong Answers:</span>
+            <span class="summary-value">{{ wrong_answers }}</span>
+        </div>
+    </div>
+    <a href="/test">Retake Test</a>
+</body>
+</html>
